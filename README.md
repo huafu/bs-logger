@@ -1,9 +1,8 @@
-# bs-logger
+<img align="right" src="icon.png"></img>
 
-[![Build Status](https://img.shields.io/travis/huafu/bs-logger/master.svg)](https://travis-ci.org/huafu/bs-logger)
-[![Coverage Status](https://img.shields.io/coveralls/huafu/bs-logger/master.svg)](https://coveralls.io/github/huafu/bs-logger?branch=master)
+# B.S. Logger [![Build Status](https://travis-ci.org/huafu/bs-logger.svg?branch=master)](https://travis-ci.org/huafu/bs-logger) [![Coverage Status](https://img.shields.io/coveralls/huafu/bs-logger/master.svg)](https://coveralls.io/github/huafu/bs-logger?branch=master) [![Beerpay](https://beerpay.io/huafu/bs-logger/badge.svg?style=beer-square)](https://beerpay.io/huafu/bs-logger)  [![Beerpay](https://beerpay.io/huafu/bs-logger/make-wish.svg?style=flat-square)](https://beerpay.io/huafu/bs-logger?focus=wish)
 
-Opinionated bare simple logger for NodeJS (with TypeScript typings).
+**Opinionated bare simple logger for NodeJS (with TypeScript typings)**.
 
 BSLogger has been created after being disapointed not finding a matching logger on the internet. Not that others aren't good, they just did not fit what I was looking for.
 
@@ -20,6 +19,13 @@ Here is what I was looking for (and tried to implemented in BSLogger):
 
 ## TL,DR:
 
+Install:
+```sh
+npm install --save bs-logger
+# or
+yarn add bs-logger
+```
+Use:
 ```js
 const { logger } = require('bs-logger');
 //    or
@@ -33,7 +39,7 @@ logger.debug('bar');
 logger.warn({foo: 'bar'}, 'dummy', 'other'/*, ...*/);
 ```
 
-Other (more complex) example:
+More complex example:
 ```js
 // env MY_LOG_TARGETS="debug.log:trace,stderr:warn%json"
 import { createLogger } from 'bs-logger';
