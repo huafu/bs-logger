@@ -1,10 +1,10 @@
 {
-  "name": "nanologger",
+  "name": "bs-logger",
   "version": "0.1.0",
-  "description": "Nano logger for NodeJS",
+  "description": "Bare simple logger for NodeJS",
   "author": "Huafu Gandon <huafu.gandon@gmail.com>",
   "license": "MIT",
-  "repository": "git+https://github.com/huafu/nanologger.git",
+  "repository": "git+https://github.com/huafu/bs-logger.git",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -22,10 +22,13 @@
     "postversion": "git push && git push --tags"
   },
   "keywords": [
+    "bare simple logger",
+    "simple logger",
+    "simple",
+    "logger",
     "typescript",
     "lib",
-    "library",
-    "logger"
+    "library"
   ],
   "files": [
     "dist"

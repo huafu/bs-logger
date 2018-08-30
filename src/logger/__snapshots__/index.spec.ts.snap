@@ -1,0 +1,211 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createLogger debug() should log with context: target.format 1`] = `
+Object {
+  "context": Object {
+    "foo": "bar",
+    "logLevel": 20,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger debug() should log with context: target.stream.write 1`] = `
+"[20] hi!
+"
+`;
+
+exports[`createLogger debug() should log without context: target.format 1`] = `
+Object {
+  "context": Object {
+    "logLevel": 20,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger debug() should log without context: target.stream.write 1`] = `
+"[20] hi!
+"
+`;
+
+exports[`createLogger error() should log with context: target.format 1`] = `
+Object {
+  "context": Object {
+    "foo": "bar",
+    "logLevel": 50,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger error() should log with context: target.stream.write 1`] = `
+"[50] hi!
+"
+`;
+
+exports[`createLogger error() should log without context: target.format 1`] = `
+Object {
+  "context": Object {
+    "logLevel": 50,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger error() should log without context: target.stream.write 1`] = `
+"[50] hi!
+"
+`;
+
+exports[`createLogger fatal() should log with context: target.format 1`] = `
+Object {
+  "context": Object {
+    "foo": "bar",
+    "logLevel": 60,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger fatal() should log with context: target.stream.write 1`] = `
+"[60] hi!
+"
+`;
+
+exports[`createLogger fatal() should log without context: target.format 1`] = `
+Object {
+  "context": Object {
+    "logLevel": 60,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger fatal() should log without context: target.stream.write 1`] = `
+"[60] hi!
+"
+`;
+
+exports[`createLogger info() should log with context: target.format 1`] = `
+Object {
+  "context": Object {
+    "foo": "bar",
+    "logLevel": 30,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger info() should log with context: target.stream.write 1`] = `
+"[30] hi!
+"
+`;
+
+exports[`createLogger info() should log without context: target.format 1`] = `
+Object {
+  "context": Object {
+    "logLevel": 30,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger info() should log without context: target.stream.write 1`] = `
+"[30] hi!
+"
+`;
+
+exports[`createLogger trace() should log with context: target.format 1`] = `
+Object {
+  "context": Object {
+    "foo": "bar",
+    "logLevel": 10,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger trace() should log with context: target.stream.write 1`] = `
+"[10] hi!
+"
+`;
+
+exports[`createLogger trace() should log without context: target.format 1`] = `
+Object {
+  "context": Object {
+    "logLevel": 10,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger trace() should log without context: target.stream.write 1`] = `
+"[10] hi!
+"
+`;
+
+exports[`createLogger warn() should log with context: target.format 1`] = `
+Object {
+  "context": Object {
+    "foo": "bar",
+    "logLevel": 40,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger warn() should log with context: target.stream.write 1`] = `
+"[40] hi!
+"
+`;
+
+exports[`createLogger warn() should log without context: target.format 1`] = `
+Object {
+  "context": Object {
+    "logLevel": 40,
+    "package": "pkg",
+  },
+  "message": "hi!",
+  "sequence": 1,
+  "time": 1514764800000,
+}
+`;
+
+exports[`createLogger warn() should log without context: target.stream.write 1`] = `
+"[40] hi!
+"
+`;
