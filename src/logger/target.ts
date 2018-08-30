@@ -39,6 +39,12 @@ const parseLogTargets = (targetString?: string): LogTarget[] => {
   // create the parsed list of targets
   return items.reduce(
     (targets, str) => {
+      let format!: LogMessageFormatter
+      // grab the log formatter if any defined
+      str = str.replace(/^(.+)%([a-z_][a-z0-9_]*)$/, (_, before, key: string) => {
+        format = (LogFormatters as any)[key]
+        return before
+      })
       const pieces = str.match(logTargetWithLevelRegex)
       let file!: string
       let level!: string
@@ -59,18 +65,21 @@ const parseLogTargets = (targetString?: string): LogTarget[] => {
       if (!file) {
         return targets
       }
+      const isStandardFd = /^(stdout|stderr)$/i.test(file)
+      // use the default formatter if none defiend
+      if (format == null) {
+        format = isStandardFd ? LogFormatters.simple : LogFormatters.json
+      }
 
       // creates the target
       const target: LogTarget = cacheGetters(
         {
+          format,
           get minLevel() {
             return parseLogLevel(level) || -Infinity
           },
-          get format() {
-            return /^(stdout|stderr)$/i.test(file) ? LogFormatters.prefixedMessage : LogFormatters.json
-          },
           get stream(): Writable {
-            if (/^(stdout|stderr)$/i.test(file)) {
+            if (isStandardFd) {
               return (process as any)[file.toLowerCase()]
             } else {
               return createWriteStream(resolve(process.cwd(), file), {
@@ -82,7 +91,6 @@ const parseLogTargets = (targetString?: string): LogTarget[] => {
           },
         },
         'minLevel',
-        'format',
         'stream',
       )
 

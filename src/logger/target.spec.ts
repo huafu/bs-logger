@@ -2,7 +2,7 @@ import { createWriteStream as _createWriteStream } from 'fs'
 import { resolve } from 'path'
 
 import { LogLevels } from './level'
-import { LogFormatters } from './message'
+import { LogFormatters, LogMessageFormatter, registerLogFormatter } from './message'
 import { DEFAULT_LOG_TARGET, parseLogTargets } from './target'
 
 const createWriteStream = _createWriteStream as jest.Mock<typeof _createWriteStream>
@@ -70,26 +70,26 @@ describe('parseLogTargets', () => {
   it('should parse stderr', () => {
     let targets = parseLogTargets('stderr')
     expect(targets).toHaveLength(1)
-    expect(targets[0].format).toBe(LogFormatters.prefixedMessage)
+    expect(targets[0].format).toBe(LogFormatters.simple)
     expect(targets[0].minLevel).toBe(-Infinity)
     expect(targets[0].stream).toBe(process.stderr)
 
     targets = parseLogTargets('STDERR')
     expect(targets).toHaveLength(1)
-    expect(targets[0].format).toBe(LogFormatters.prefixedMessage)
+    expect(targets[0].format).toBe(LogFormatters.simple)
     expect(targets[0].minLevel).toBe(-Infinity)
     expect(targets[0].stream).toBe(process.stderr)
   })
   it('should parse stdout', () => {
     let targets = parseLogTargets('stdout')
     expect(targets).toHaveLength(1)
-    expect(targets[0].format).toBe(LogFormatters.prefixedMessage)
+    expect(targets[0].format).toBe(LogFormatters.simple)
     expect(targets[0].minLevel).toBe(-Infinity)
     expect(targets[0].stream).toBe(process.stdout)
 
     targets = parseLogTargets('STDOUT')
     expect(targets).toHaveLength(1)
-    expect(targets[0].format).toBe(LogFormatters.prefixedMessage)
+    expect(targets[0].format).toBe(LogFormatters.simple)
     expect(targets[0].minLevel).toBe(-Infinity)
     expect(targets[0].stream).toBe(process.stdout)
   })
@@ -99,14 +99,37 @@ describe('parseLogTargets', () => {
     expect(targets[0].stream).toBeDefined()
     expect(createWriteStream).toHaveBeenCalledTimes(1)
   })
+  it('should read the format after `%`', () => {
+    let targets = parseLogTargets('file.log%simple')
+    expect(targets).toHaveLength(1)
+    expect(targets[0].format).toBe(LogFormatters.simple)
+    targets = parseLogTargets('stdout%json')
+    expect(targets).toHaveLength(1)
+    expect(targets[0].format).toBe(LogFormatters.json)
+  })
+  it('should fallback to the default formatter if the specified one does not exist', () => {
+    let targets = parseLogTargets('file.log%foo')
+    expect(targets).toHaveLength(1)
+    expect(targets[0].format).toBe(LogFormatters.json)
+    targets = parseLogTargets('stdout%bar')
+    expect(targets).toHaveLength(1)
+    expect(targets[0].format).toBe(LogFormatters.simple)
+  })
+  it('should be possible to use custom formatters', () => {
+    const fooFormatter: LogMessageFormatter = m => m.message
+    registerLogFormatter('foo', fooFormatter)
+    const targets = parseLogTargets('file.log%foo')
+    expect(targets).toHaveLength(1)
+    expect(targets[0].format).toBe(fooFormatter)
+  })
   it('should read multiple targets', () => {
-    const targets = parseLogTargets('all.log, stdout:info, stderr:55 ,append.log+:warn')
+    const targets = parseLogTargets('all.log, stdout:info%json, stderr:55 ,append.log+:warn%simple')
     expect(targets).toHaveLength(4)
     // formatter
     expect(targets[0].format).toBe(LogFormatters.json)
-    expect(targets[1].format).toBe(LogFormatters.prefixedMessage)
-    expect(targets[2].format).toBe(LogFormatters.prefixedMessage)
-    expect(targets[3].format).toBe(LogFormatters.json)
+    expect(targets[1].format).toBe(LogFormatters.json)
+    expect(targets[2].format).toBe(LogFormatters.simple)
+    expect(targets[3].format).toBe(LogFormatters.simple)
     // minLevel
     expect(targets[0].minLevel).toBe(-Infinity)
     expect(targets[1].minLevel).toBe(LogLevels.info)

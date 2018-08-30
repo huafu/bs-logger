@@ -1,7 +1,13 @@
 import { LogMethod, Logger, createLogger, lastSequenceNumber, resetSequence } from './logger'
 import { LogContext, LogContexts } from './logger/context'
 import { LogLevelName, LogLevelNames, LogLevels, logLevelNameFor, parseLogLevel } from './logger/level'
-import { LogFormatters, LogMessage, LogMessageFormatter, LogMessageTranslator } from './logger/message'
+import {
+  LogMessage,
+  LogMessageFormatter,
+  LogMessageTranslator,
+  registerLogFormatter,
+  resetLogFormatters,
+} from './logger/message'
 import { DEFAULT_LOG_TARGET, LogTarget, parseLogTargets } from './logger/target'
 import { cacheGetters } from './utils/cache-getters'
 
@@ -44,7 +50,6 @@ export {
   lastSequenceNumber,
   LogContext,
   LogContexts,
-  LogFormatters,
   Logger,
   LogLevelName,
   logLevelNameFor,
@@ -56,6 +61,8 @@ export {
   LogTarget,
   parseLogLevel,
   parseLogTargets,
+  registerLogFormatter,
+  resetLogFormatters,
   resetSequence,
   // debug
   __setup,

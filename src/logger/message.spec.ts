@@ -1,6 +1,10 @@
-import { LogFormatters } from './message'
+import { LogFormatters, LogMessageFormatter, registerLogFormatter, resetLogFormatters } from './message'
 
 const time = +new Date('2018-01-01T12:30:40.000Z')
+
+beforeEach(() => {
+  resetLogFormatters()
+})
 
 describe('LogFormatters', () => {
   describe('json', () => {
@@ -57,10 +61,10 @@ describe('LogFormatters', () => {
       )
     })
   })
-  describe('prefixedMessage', () => {
+  describe('simple', () => {
     it('should format correctly', () => {
       expect(
-        LogFormatters.prefixedMessage({
+        LogFormatters.simple({
           context: { package: 'pkg', application: 'app', namespace: 'ns', logLevel: 50 },
           message: 'hello',
           sequence: 1,
@@ -68,7 +72,7 @@ describe('LogFormatters', () => {
         }),
       ).toMatchInlineSnapshot(`"pkg[ns] (ERROR) hello"`)
       expect(
-        LogFormatters.prefixedMessage({
+        LogFormatters.simple({
           context: { package: 'pkg', application: 'app', namespace: 'ns' },
           message: 'hello',
           sequence: 1,
@@ -76,7 +80,7 @@ describe('LogFormatters', () => {
         }),
       ).toMatchInlineSnapshot(`"pkg[ns] (TRACE) hello"`)
       expect(
-        LogFormatters.prefixedMessage({
+        LogFormatters.simple({
           context: { package: 'pkg', application: 'app' },
           message: 'hello',
           sequence: 12,
@@ -84,7 +88,7 @@ describe('LogFormatters', () => {
         }),
       ).toMatchInlineSnapshot(`"pkg[root] (TRACE) hello"`)
       expect(
-        LogFormatters.prefixedMessage({
+        LogFormatters.simple({
           context: { application: 'app' },
           message: 'hello',
           sequence: 12,
@@ -92,7 +96,7 @@ describe('LogFormatters', () => {
         }),
       ).toMatchInlineSnapshot(`"app[root] (TRACE) hello"`)
       expect(
-        LogFormatters.prefixedMessage({
+        LogFormatters.simple({
           context: {},
           message: 'hello',
           sequence: 12,
@@ -100,5 +104,23 @@ describe('LogFormatters', () => {
         }),
       ).toMatchInlineSnapshot(`"main[root] (TRACE) hello"`)
     })
+  })
+})
+
+describe('registerLogFormatter', () => {
+  it('should be possible to register a custom formatter', () => {
+    const fooFormatter: LogMessageFormatter = m => m.message
+    registerLogFormatter('foo', fooFormatter)
+    expect(LogFormatters.foo).toBe(fooFormatter)
+  })
+})
+
+describe('resetLogFormatter', () => {
+  it('should be possible to reset log formatters to defaults', () => {
+    const fooFormatter: LogMessageFormatter = m => m.message
+    registerLogFormatter('json', fooFormatter)
+    expect(LogFormatters.json).toBe(fooFormatter)
+    resetLogFormatters()
+    expect(LogFormatters.json).not.toBe(fooFormatter)
   })
 })
