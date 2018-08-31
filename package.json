@@ -1,6 +1,6 @@
 {
   "name": "bs-logger",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Bare simple logger for NodeJS",
   "author": "Huafu Gandon <huafu.gandon@gmail.com>",
   "license": "MIT",
