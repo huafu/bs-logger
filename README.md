@@ -189,6 +189,83 @@ const logger = createLogger({
   });
 ```
 
+### Testing
+
+The whole `testing` namespace has useful helpers for using BSLogger while unit testing your product.
+
+In your tests you would usually prefer not having any logging to happen, or you would like to check what has been logged but without actually logging it to any target.
+
+The `testing` namespace holds all testing utilities:
+```js
+import { testing } from 'bs-logger'
+```
+
+- If you use the root logger, here is how to disable its output:
+```js
+testing.setup()
+```
+and the `logger` (or `default`) export will become a `LoggerMock` instance (see below).
+
+- If you create logger(s) using `createLogger`, when testing use the `testing.createLoggerMock` instead. It accepts the same first argument, with an extra second argument, optional, being the `LogTargetMock` to be used (see below).
+
+#### LoggerMock
+
+Loggers created using the `testing` namespace will have one and only one log target being a `LogTargetMock`, and that target will be set on the `target` extra property of the logger.
+
+Here are the extra properties of `LogTargetMock` which you can then use for testing:
+
+- **messages** `LogMessage[]`: all log message objects which would have normally be logged
+  - **last** `LogMessage`: the last one being logged
+  - **trace** `LogMessage[]`: all log message objects with `trace` level
+    - **last** `LogMessage`: last one with `trace` level
+  - **debug** `LogMessage[]`: all log message objects with `debug` level
+    - **last** `LogMessage`: last one with `debug` level
+  - ...
+- **lines** `string[]`: all formatted log message lines which would have normally be logged
+  - **last** `string`: the last one being logged
+  - **trace** `string[]`: all formatted log message lines with `trace` level
+    - **last** `string`: last one with `trace` level
+  - **debug** `string[]`: all formatted log message lines with `debug` level
+    - **last** `string`: last one with `debug` level
+  - ...
+- **clear** `() => void`: method to clear all log message objects and formatted lines
+- **filteredMessages** `(level: number | null, untilLevel?: number) => LogMessage[]`: method to filter log message objects
+- **filteredLins** `(level: number | null, untilLevel?: number) => string[]`: method to filter formatted log message lines
+
+#### Example
+
+Let's say you have a `logger.js` file in which you create the logger for your app:
+```js
+// file: logger.js
+import { testing, createLogger, LogContexts } from 'bs-logger';
+
+const factory = process.env.TEST ? testing.createLoggerMock : createLogger;
+
+export default factory({ [LogContexts.application]: 'foo' });
+```
+
+In a test you could:
+```js
+import logger from './logger';
+// in `fetch(url)` you'd use the logger like `logger.debug({url}, 'GET')` when the request is actually made
+import fetch from './http';
+
+test('it should cache request', () => {
+  logger.target.clear();
+  fetch('http://foo.bar/dummy.json');
+  expect(logger.target.messages.length).toBe(1);
+  fetch('http://foo.bar/dummy.json');
+  expect(logger.target.messages.length).toBe(1);
+  // you can also expect on the message:
+  expect(logger.target.messages.last.message).toBe('GET')
+  expect(logger.target.messages.last.context.url).toBe('http://foo.bar/dummy.json')
+  // or (mock target formater prefix the message with `[level:xxx] ` when there is a level)
+  expect(logger.target.lines.last).toBe('[level:20] GET')
+  // or filtering with level:
+  expect(logger.target.lines.debug.last).toBe('[level:20] GET')
+});
+```
+
 ## Installing
 
 Add to your project with `npm`:
