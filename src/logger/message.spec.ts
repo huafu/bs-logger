@@ -60,6 +60,20 @@ describe('LogFormatters', () => {
         `"{\\"context\\":{},\\"message\\":\\"hello\\",\\"sequence\\":12,\\"time\\":\\"2018-01-01T12:30:40.000Z\\"}"`,
       )
     })
+    it('should allow circular references', () => {
+      const obj: any = { foo: 'bar' }
+      obj.circularRef = obj
+      expect(
+        LogFormatters.json({
+          context: { one: 1, withCircular: obj },
+          message: 'hello',
+          sequence: 12,
+          time,
+        }),
+      ).toMatchInlineSnapshot(
+        `"{\\"context\\":{\\"one\\":1,\\"withCircular\\":{\\"circularRef\\":\\"__cycle__\\",\\"foo\\":\\"bar\\"}},\\"message\\":\\"hello\\",\\"sequence\\":12,\\"time\\":\\"2018-01-01T12:30:40.000Z\\"}"`,
+      )
+    })
   })
   describe('simple', () => {
     it('should format correctly', () => {

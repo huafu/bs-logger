@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- [FIX] Allow circular references in the `json` formatter
+
 ## 0.2.2
 
 - [FIX] Exports `LoggerMock` type
