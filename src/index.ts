@@ -1,6 +1,6 @@
 import { LogMethod, Logger, createLogger, lastSequenceNumber, resetSequence } from './logger'
 import { LogContext, LogContexts } from './logger/context'
-import { LogLevelName, LogLevelNames, LogLevels, logLevelNameFor, parseLogLevel } from './logger/level'
+import { LogLevelName, LogLevels, logLevelNameFor, parseLogLevel } from './logger/level'
 import {
   LogMessage,
   LogMessageFormatter,
@@ -8,42 +8,15 @@ import {
   registerLogFormatter,
   resetLogFormatters,
 } from './logger/message'
+import { rootLogger, setup } from './logger/root'
 import { DEFAULT_LOG_TARGET, LogTarget, parseLogTargets } from './logger/target'
-import { cacheGetters } from './utils/cache-getters'
-
-let cache!: { root: any }
-// tslint:disable-next-line:variable-name
-const __setup = (factory = () => createLogger({ targets: process.env.LOG_TARGETS })) => {
-  cache = cacheGetters(
-    {
-      get root(): any {
-        return factory()
-      },
-    },
-    'root',
-  )
-}
-
-// creates a lazy logger as default export
-const logger: Logger = ((...args: any[]) => cache.root(...args)) as any
-const props = [...LogLevelNames, 'child', 'wrap']
-for (const prop of props) {
-  Object.defineProperty(logger, prop, {
-    enumerable: true,
-    configurable: true,
-    get() {
-      return cache.root[prop]
-    },
-  })
-}
-cacheGetters(logger as any, ...props)
-
-__setup()
+import * as testing from './testing'
 
 export {
   // main
-  logger as default,
-  logger,
+  rootLogger as default,
+  rootLogger as logger,
+  setup,
   // external
   createLogger,
   DEFAULT_LOG_TARGET,
@@ -64,6 +37,5 @@ export {
   registerLogFormatter,
   resetLogFormatters,
   resetSequence,
-  // debug
-  __setup,
+  testing,
 }

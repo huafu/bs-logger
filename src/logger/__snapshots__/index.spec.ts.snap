@@ -14,7 +14,7 @@ Object {
 `;
 
 exports[`createLogger debug() should log with context: target.stream.write 1`] = `
-"[20] hi!
+"[level:20] hi!
 "
 `;
 
@@ -31,7 +31,7 @@ Object {
 `;
 
 exports[`createLogger debug() should log without context: target.stream.write 1`] = `
-"[20] hi!
+"[level:20] hi!
 "
 `;
 
@@ -49,7 +49,7 @@ Object {
 `;
 
 exports[`createLogger error() should log with context: target.stream.write 1`] = `
-"[50] hi!
+"[level:50] hi!
 "
 `;
 
@@ -66,7 +66,7 @@ Object {
 `;
 
 exports[`createLogger error() should log without context: target.stream.write 1`] = `
-"[50] hi!
+"[level:50] hi!
 "
 `;
 
@@ -84,7 +84,7 @@ Object {
 `;
 
 exports[`createLogger fatal() should log with context: target.stream.write 1`] = `
-"[60] hi!
+"[level:60] hi!
 "
 `;
 
@@ -101,7 +101,7 @@ Object {
 `;
 
 exports[`createLogger fatal() should log without context: target.stream.write 1`] = `
-"[60] hi!
+"[level:60] hi!
 "
 `;
 
@@ -119,7 +119,7 @@ Object {
 `;
 
 exports[`createLogger info() should log with context: target.stream.write 1`] = `
-"[30] hi!
+"[level:30] hi!
 "
 `;
 
@@ -136,7 +136,7 @@ Object {
 `;
 
 exports[`createLogger info() should log without context: target.stream.write 1`] = `
-"[30] hi!
+"[level:30] hi!
 "
 `;
 
@@ -154,7 +154,7 @@ Object {
 `;
 
 exports[`createLogger trace() should log with context: target.stream.write 1`] = `
-"[10] hi!
+"[level:10] hi!
 "
 `;
 
@@ -171,7 +171,7 @@ Object {
 `;
 
 exports[`createLogger trace() should log without context: target.stream.write 1`] = `
-"[10] hi!
+"[level:10] hi!
 "
 `;
 
@@ -189,7 +189,7 @@ Object {
 `;
 
 exports[`createLogger warn() should log with context: target.stream.write 1`] = `
-"[40] hi!
+"[level:40] hi!
 "
 `;
 
@@ -206,6 +206,6 @@ Object {
 `;
 
 exports[`createLogger warn() should log without context: target.stream.write 1`] = `
-"[40] hi!
+"[level:40] hi!
 "
 `;

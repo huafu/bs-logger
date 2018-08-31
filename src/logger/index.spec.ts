@@ -1,7 +1,8 @@
+import { LogTargetMock } from '../testing/target-mock'
+
 import { LogMethod, Logger, createLogger, resetSequence } from '.'
 import { LogContexts } from './context'
 import { LogMessage } from './message'
-import { LogTarget } from './target'
 
 const timeOrigin = +new Date('2018-01-01T00:00:00.000Z')
 let timeIncrement = 0
@@ -16,16 +17,16 @@ beforeEach(() => {
 })
 
 describe('createLogger', () => {
-  let target: TargetMock
+  let target: LogTargetMock
   let logger: Logger
-  let nonMatchingTarget: TargetMock
+  let nonMatchingTarget: LogTargetMock
   let loggerWithoutTarget: Logger
   let loggerWithNonMatchingTarget: Logger
 
   beforeEach(() => {
-    target = new TargetMock()
+    target = new LogTargetMock()
     logger = createLogger({ context: { package: 'pkg' }, targets: [target] })
-    nonMatchingTarget = new TargetMock(Infinity)
+    nonMatchingTarget = new LogTargetMock(Infinity)
     loggerWithoutTarget = createLogger({ targets: [] })
     loggerWithNonMatchingTarget = createLogger({ targets: [nonMatchingTarget] })
   })
@@ -37,13 +38,13 @@ describe('createLogger', () => {
   it('should not log when no matching target', () => {
     expect(loggerWithNonMatchingTarget.isEmptyFunction).not.toBeDefined()
     loggerWithNonMatchingTarget({ [LogContexts.logLevel]: 0 }, 'hi!')
-    expect(nonMatchingTarget.formattedMessages).toHaveLength(0)
-    expect(nonMatchingTarget.writtenLines).toHaveLength(0)
+    expect(nonMatchingTarget.messages).toHaveLength(0)
+    expect(nonMatchingTarget.lines).toHaveLength(0)
   })
 
   it('should log without context', () => {
     logger('hello')
-    expect(target.lastFormatted).toMatchInlineSnapshot(`
+    expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "package": "pkg",
@@ -53,12 +54,12 @@ Object {
   "time": 1514764800000,
 }
 `)
-    expect(target.lastWritten).toMatchInlineSnapshot(`
+    expect(target.lines.last).toMatchInlineSnapshot(`
 "hello
 "
 `)
     logger('hello', 'motto')
-    expect(target.lastFormatted).toMatchInlineSnapshot(`
+    expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "package": "pkg",
@@ -68,7 +69,7 @@ Object {
   "time": 1514851200000,
 }
 `)
-    expect(target.lastWritten).toMatchInlineSnapshot(`
+    expect(target.lines.last).toMatchInlineSnapshot(`
 "hello motto
 "
 `)
@@ -76,7 +77,7 @@ Object {
 
   it('should log with context', () => {
     logger({ foo: 'bar' }, 'hello')
-    expect(target.lastFormatted).toMatchInlineSnapshot(`
+    expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "foo": "bar",
@@ -87,12 +88,12 @@ Object {
   "time": 1514764800000,
 }
 `)
-    expect(target.lastWritten).toMatchInlineSnapshot(`
+    expect(target.lines.last).toMatchInlineSnapshot(`
 "hello
 "
 `)
     logger({ package: 'foo', foo: 'bar', [LogContexts.logLevel]: -1000 }, 'hello')
-    expect(target.lastFormatted).toMatchInlineSnapshot(`
+    expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "foo": "bar",
@@ -104,8 +105,8 @@ Object {
   "time": 1514851200000,
 }
 `)
-    expect(target.lastWritten).toMatchInlineSnapshot(`
-"[-1000] hello
+    expect(target.lines.last).toMatchInlineSnapshot(`
+"[level:-1000] hello
 "
 `)
   })
@@ -130,7 +131,7 @@ Object {
     it('should use given translator', () => {
       loggerWithTr('woot!')
       expect(tr1).toHaveBeenCalledTimes(1)
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "foo": "bar",
@@ -140,7 +141,7 @@ Object {
   "time": 1514764800000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "tr1: woot!
 "
 `)
@@ -149,7 +150,7 @@ Object {
       loggerWithTr.child({ childNoTr: true })('hello')
       expect(tr1).toHaveBeenCalledTimes(1)
       expect(tr2).toHaveBeenCalledTimes(0)
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "childNoTr": true,
@@ -160,14 +161,14 @@ Object {
   "time": 1514764800000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "tr1: hello
 "
 `)
       loggerWithTr.child(tr2)('bye')
       expect(tr1).toHaveBeenCalledTimes(2)
       expect(tr2).toHaveBeenCalledTimes(1)
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "bar": "foo",
@@ -178,7 +179,7 @@ Object {
   "time": 1514851200000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "tr2: tr1: bye
 "
 `)
@@ -200,21 +201,21 @@ Object {
     describe(`${levelName}()`, () => {
       it(`should log without context`, () => {
         logMethods.base('hi!')
-        expect(target.lastFormatted).toMatchSnapshot('target.format')
-        expect(target.lastWritten).toMatchSnapshot('target.stream.write')
+        expect(target.messages.last).toMatchSnapshot('target.format')
+        expect(target.lines.last).toMatchSnapshot('target.stream.write')
       })
       it(`should log with context`, () => {
         // -1000 should not appear in snapshots
         logMethods.base({ foo: 'bar', [LogContexts.logLevel]: -1000 }, 'hi!')
-        expect(target.lastFormatted).toMatchSnapshot('target.format')
-        expect(target.lastWritten).toMatchSnapshot('target.stream.write')
+        expect(target.messages.last).toMatchSnapshot('target.format')
+        expect(target.lines.last).toMatchSnapshot('target.stream.write')
       })
       it('should not log anything with no targets or none matching', () => {
         expect(logMethods.noTarget.isEmptyFunction).toBe(true)
         expect(logMethods.nonMatchingTarget.isEmptyFunction).not.toBeDefined()
         logMethods.nonMatchingTarget('foo')
-        expect(nonMatchingTarget.formattedMessages).toHaveLength(0)
-        expect(nonMatchingTarget.writtenLines).toHaveLength(0)
+        expect(nonMatchingTarget.messages).toHaveLength(0)
+        expect(nonMatchingTarget.lines).toHaveLength(0)
         // should have been replaced with empty func
         expect(logMethods.nonMatchingTarget.isEmptyFunction).toBe(true)
       })
@@ -238,7 +239,7 @@ Object {
     it('should extend the context', () => {
       const child = logger.child({ child: 'foo', [LogContexts.logLevel]: 555 })
       child('msg')
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "child": "foo",
@@ -250,12 +251,12 @@ Object {
   "time": 1514764800000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
-"[555] msg
+      expect(target.lines.last).toMatchInlineSnapshot(`
+"[level:555] msg
 "
 `)
       child({ [LogContexts.logLevel]: -10 }, 'hi!')
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "child": "foo",
@@ -267,8 +268,8 @@ Object {
   "time": 1514851200000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
-"[-10] hi!
+      expect(target.lines.last).toMatchInlineSnapshot(`
+"[level:-10] hi!
 "
 `)
     })
@@ -281,7 +282,7 @@ Object {
     it('should wrap a function', () => {
       const f1 = logger.wrap(toWrap)
       expect(f1('foo')).toBe('bar foo')
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "call": Object {
@@ -296,13 +297,13 @@ Object {
   "time": 1514764800000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "calling toWrap()
 "
 `)
       const f2 = logger.wrap('custom msg', toWrap)
       expect(f2('foo')).toBe('bar foo')
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "call": Object {
@@ -317,13 +318,13 @@ Object {
   "time": 1514851200000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "custom msg
 "
 `)
       const f3 = logger.wrap({ foo: 'bar' }, 'custom msg', toWrap)
       expect(f3('foo')).toBe('bar foo')
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "call": Object {
@@ -339,7 +340,7 @@ Object {
   "time": 1514937600000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "custom msg
 "
 `)
@@ -353,7 +354,7 @@ Object {
 
     it('should have correct message for anonymous functions', () => {
       logger.wrap(() => 'foo')()
-      expect(target.lastFormatted).toMatchInlineSnapshot(`
+      expect(target.messages.last).toMatchInlineSnapshot(`
 Object {
   "context": Object {
     "call": Object {
@@ -366,39 +367,10 @@ Object {
   "time": 1514764800000,
 }
 `)
-      expect(target.lastWritten).toMatchInlineSnapshot(`
+      expect(target.lines.last).toMatchInlineSnapshot(`
 "calling [anonymous]()
 "
 `)
     })
   })
 })
-
-class TargetMock implements LogTarget {
-  readonly formattedMessages: LogMessage[] = []
-  readonly writtenLines: string[] = []
-  readonly stream: LogTarget['stream']
-
-  get lastFormatted() {
-    return this.formattedMessages[this.formattedMessages.length - 1]
-  }
-
-  get lastWritten() {
-    return this.writtenLines[this.writtenLines.length - 1]
-  }
-
-  constructor(public minLevel = -Infinity) {
-    this.stream = {
-      write: (msg: string) => !!this.writtenLines.push(msg),
-    } as LogTarget['stream']
-  }
-
-  format(msg: LogMessage): string {
-    this.formattedMessages.push(msg)
-    const lvl = msg.context[LogContexts.logLevel]
-    if (lvl != null) {
-      return `[${lvl}] ${msg.message}`
-    }
-    return msg.message
-  }
-}

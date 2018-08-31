@@ -162,4 +162,4 @@ const createLogger = ({
   return log
 }
 
-export { createLogger, lastSequenceNumber, Logger, LogMethod, resetSequence }
+export { createLogger, lastSequenceNumber, Logger, LogMethod, resetSequence, CreateLoggerOptions }

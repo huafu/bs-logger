@@ -22,19 +22,20 @@ Array [
   "LogMessageTranslator",
   "registerLogFormatter",
   "resetLogFormatters",
+  "default",
+  "logger",
+  "setup",
   "DEFAULT_LOG_TARGET",
   "LogTarget",
   "parseLogTargets",
-  "__setup",
-  "default",
-  "logger",
+  "testing",
 ]
 `)
   })
 
   it('should not create any logger until default logger is used', () => {
     const factory = jest.fn(() => () => () => void 0)
-    bsl.__setup(factory)
+    bsl.setup(factory)
     expect(factory).not.toHaveBeenCalled()
     bsl.default('hello')
     expect(factory).toHaveBeenCalledTimes(1)
