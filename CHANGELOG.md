@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.2
+
+- [FIX] Exports `LoggerMock` type
+
 ## 0.2.1
 
 - [FEATURE] Adds testing helpers

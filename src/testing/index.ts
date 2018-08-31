@@ -16,4 +16,4 @@ const createLoggerMock = (options?: CreateLoggerOptions, target = new LogTargetM
   return Object.assign(createLogger(opt), { target })
 }
 
-export { LogTargetMock, ExtendedArray, extendArray, setupForTesting as setup, createLoggerMock }
+export { LogTargetMock, ExtendedArray, extendArray, setupForTesting as setup, createLoggerMock, LoggerMock }
