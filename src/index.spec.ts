@@ -6,27 +6,19 @@ describe('bs-logger', () => {
   it('should export required helpers', () => {
     expect(Object.keys(bsl)).toMatchInlineSnapshot(`
 Array [
-  "LogMethod",
-  "Logger",
   "createLogger",
   "lastSequenceNumber",
   "resetSequence",
-  "LogContext",
   "LogContexts",
-  "LogLevelName",
   "LogLevels",
   "logLevelNameFor",
   "parseLogLevel",
-  "LogMessage",
-  "LogMessageFormatter",
-  "LogMessageTranslator",
   "registerLogFormatter",
   "resetLogFormatters",
   "default",
   "logger",
   "setup",
   "DEFAULT_LOG_TARGET",
-  "LogTarget",
   "parseLogTargets",
   "testing",
 ]

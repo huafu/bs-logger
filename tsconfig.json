@@ -10,7 +10,7 @@
       "jest", "node"
     ],
     "moduleResolution": "node",
-    "importHelpers": true,
+    "importHelpers": false,
     "declaration": true,
     "pretty": true,
     "sourceMap": true,
