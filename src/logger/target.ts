@@ -13,7 +13,7 @@ interface LogTarget {
   format: LogMessageFormatter
 }
 /**
- * Used to parse a log target with a level: `path/to/file[+]:level`
+ * Used to parse a log target with a level: `path/to/file[+]:level[|once]`
  */
 const logTargetWithLevelRegex = new RegExp(`^\\s*(.+):([0-9]+|${LogLevelNames.join('|')})\\s*$`, 'i')
 

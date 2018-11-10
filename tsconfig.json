@@ -20,7 +20,8 @@
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "stripInternal": true,
   },
   "exclude": ["node_modules", "dist", "es", "lib"]
 }
