@@ -1,3 +1,8 @@
+<a name="0.2.6"></a>
+## [0.2.6](https://github.com/huafu/bs-logger/compare/v0.2.5...v0.2.6) (2018-11-10)
+
+
+
 <a name="0.2.5"></a>
 ## [0.2.5](https://github.com/huafu/bs-logger/compare/v0.2.4...v0.2.5) (2018-09-04)
 
