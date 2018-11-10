@@ -106,12 +106,16 @@ const createLogger = ({
   log.child = (ctxOrTranslator: LogContext | LogMessageTranslator) => {
     const isTranslator = typeof ctxOrTranslator === 'function'
     const childContext: LogContext = isTranslator ? { ...baseContext } : { ...baseContext, ...ctxOrTranslator }
-    const translate =
-      logTranslator && isTranslator
-        ? (msg: LogMessage) => (ctxOrTranslator as LogMessageTranslator)(logTranslator(msg))
-        : isTranslator
-          ? (ctxOrTranslator as LogMessageTranslator)
-          : logTranslator
+    let translate: LogMessageTranslator | undefined
+    if (isTranslator) {
+      if (logTranslator) {
+        translate = (msg: LogMessage) => (ctxOrTranslator as LogMessageTranslator)(logTranslator(msg))
+      } else {
+        translate = ctxOrTranslator as LogMessageTranslator
+      }
+    } else {
+      translate = logTranslator
+    }
     return createLogger({ context: childContext, targets, translate })
   }
 
