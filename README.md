@@ -75,13 +75,13 @@ BSLogger exports a global logger lazyly created on first use, but it is advised 
 
 - If you are using it in a library wich is meant to be re-distributed:
   ```js
-  import { createLogger, LogContexts } 'bs-logger';
+  import { createLogger, LogContexts } from 'bs-logger';
   const logger = createLogger({ [LogContexts.package]: 'my-pacakge' });
   ```
 
 - If you are using it in an application of your own:
   ```js
-  import { createLogger, LogContexts } 'bs-logger';
+  import { createLogger, LogContexts } from 'bs-logger';
   const logger = createLogger({ [LogContexts.application]: 'my-app' });
   ```
 
