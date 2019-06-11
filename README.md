@@ -76,7 +76,7 @@ BSLogger exports a global logger lazyly created on first use, but it is advised 
 - If you are using it in a library wich is meant to be re-distributed:
   ```js
   import { createLogger, LogContexts } 'bs-logger';
-  const logger = createLogger({ [LogContexts.package]: 'my-pacakge' });
+  const logger = createLogger({ [LogContexts.package]: 'my-package' });
   ```
 
 - If you are using it in an application of your own:
@@ -116,7 +116,7 @@ logger('my message');
 
 #### Using level helpers
 
-BSLogger is aware of 6 log levels (`trace`, `debug`, `info`, `warn`, `error` and `fatal`) but you can create your owns. A log level is basically a number. The higher it is, the more important will be the message. You can find log levels constants in `LogLevels` export:
+BSLogger is aware of 6 log levels (`trace`, `debug`, `info`, `warn`, `error` and `fatal`) but you can create your own. A log level is basically a number. The higher it is, the more important will be the message. You can find log levels constants in `LogLevels` export:
 ```js
 import { LogLevels } from 'bs-logger';
 
