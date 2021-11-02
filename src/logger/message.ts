@@ -1,4 +1,4 @@
-import jsonStringify from 'fast-json-stable-stringify'
+import jsonStringify from 'safe-stable-stringify'
 
 import { LogContext, LogContexts } from './context'
 import { logLevelNameFor } from './level'
@@ -33,7 +33,7 @@ const registerLogFormatter = (name: string, format: LogMessageFormatter) => {
 
 function defaultLogFormatters() {
   return {
-    json: (msg: LogMessage) => jsonStringify({ ...msg, time: new Date(msg.time) }, { cycles: true }),
+    json: (msg: LogMessage) => jsonStringify({ ...msg, time: new Date(msg.time) }),
     simple: (msg: LogMessage) =>
       `${msg.context[LogContexts.package] || msg.context[LogContexts.application] || 'main'}[${msg.context[
         LogContexts.namespace
