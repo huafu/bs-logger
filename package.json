@@ -46,7 +46,7 @@
     "@types/node": "10.x",
     "conventional-changelog-cli": "2.x",
     "husky": "0.x",
-    "jest": "23.x",
+    "jest": "29.x",
     "lint-staged": "7.x",
     "prettier": "1.x",
     "rimraf": "2.x",
